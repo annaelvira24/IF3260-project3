@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+    <head>
+        <link rel="stylesheet" href="css/template.css">
+        <script>
+            var oldValueRotX = 0;
+            var oldValueRotY = 0;
+            var oldValueRotZ = 0;
+            var oldValueMove = 0;
+            var isShading = false;
+        </script>
+                        
+    </head>
+
+    <body>
+        <div class="navbar">
+            <label> Shader mode </label> <input id='shader' type="checkbox" onclick="updateShading()">
+            <label> Animation </label> <input id='animation' type="checkbox" onclick="updateShading()">
+            <br/>
+            <br/>
+            <label><b>Camera</b></label><br/>
+            <label>Angle&nbsp;</label><input type="range" id="angle" name="camera" min="-360" max="360" step="1" oninput="updateMove()"><br/>
+            <label>Zoom&nbsp;</label>
+            <button id="button-zoom" onmousedown="updateZoom(1.1)">In</button>
+            <button id="button-zoom" onmousedown="updateZoom(0.9)">Out</button>
+            <br/><br/><br/>
+            <label><b>File Management</b></label><br/><br/>
+            <button id = "button-save" onclick="saveData()">Save</button>
+            <button id = "button-load" onclick="loadData()">Load</button>
+        </div>
+
+        <div class="title">
+            ARTICULATED MODEL
+        </div>
+        <canvas id="glcanvas" width="pixel">
+            Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
+    </body>
+
+    <script>
+        var vertices = [];
+        var objects = [];
+
+        const canvas = document.querySelector('#glcanvas');
+        canvas.width = 520;
+        canvas.height = 520;
+
+        // Initialize the GL context
+        const gl = canvas.getContext('webgl');
+
+        if (!gl) {
+            alert('Unable to initialize WebGL. Your browser or machine may not support it.');
+        }
+
+        // Vertex shader source code
+        var vertCode = `
+            attribute vec3 position;
+            attribute vec3 normal;
+
+            uniform mat4 Pmatrix;
+            uniform mat4 Vmatrix;
+            uniform mat4 Mmatrix;
+            uniform mat4 Nmatrix;
+
+            attribute vec3 color;
+            varying vec3 vLighting;
+            varying vec3 vColor;
+
+            void main(void) {
+                gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
+                vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+                vec3 directionalLightColor = vec3(1, 1, 1);
+                vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));
+                vec4 transformedNormal = Nmatrix*vec4(normal, 1.);
+                
+                float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+                vLighting = ambientLight + (directionalLightColor * directional);
+                vColor = color;
+            }
+            `;
+
+        // Create a vertex shader object
+        var vertShader = gl.createShader(gl.VERTEX_SHADER);
+
+        // Fragment shader source code
+        var fragCode = 'precision mediump float;'+
+            'varying vec3 vColor;'+
+            'varying vec3 vLighting;'+
+            
+            'void main(void) {'+
+                'gl_FragColor = vec4(vColor, 1.);'+
+                'gl_FragColor.rgb *= vLighting;'+
+            '}';
+
+        // Create fragment shader object
+        var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+        // Create a shader program object to store
+        var shaderProgram = gl.createProgram();
+
+        function setupShader(){
+            // Attach vertex shader source code
+            gl.shaderSource(vertShader, vertCode);
+            // Compile the vertex shader
+            gl.compileShader(vertShader);
+            // Attach fragment shader source code
+            gl.shaderSource(fragShader, fragCode);
+            // Compile the fragment shader
+            gl.compileShader(fragShader);
+        }
+
+        function setupProgram(){
+            // Attach a vertex shader
+            gl.attachShader(shaderProgram, vertShader);
+            // Attach a fragment shader
+            gl.attachShader(shaderProgram, fragShader);
+            // Link both the programs
+            gl.linkProgram(shaderProgram);
+        }
+
+        setupShader();
+        setupProgram();
+
+      </script>
+      <script type="text/javascript" src="js/util.js"></script>
+      <script type="text/javascript" src="js/matrixOp.js"></script>
+      <script type="text/javascript" src="js/camera.js"></script>
+      <script type="text/javascript" src="js/projection.js"></script>
+      <script type="text/javascript" src="js/draw.js"></script>
+      <!-- <script type="text/javascript" src="js/shading.js"></script> -->
+      <!-- <script type="text/javascript" src="js/transformation.js"></script> -->
+      <script>
+          document.getElementById('angle').value = oldValueMove;
+      </script>
+</html>
