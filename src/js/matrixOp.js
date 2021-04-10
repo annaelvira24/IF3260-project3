@@ -1,3 +1,9 @@
+function degToRad(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
 function translation(tx, ty, tz){
     return [
         1,  0,  0,  0,
@@ -16,7 +22,8 @@ function scale(sx, sy, sz){
     ];
 }
 
-function xRotation(angleInRadians) {
+function xRotation(angleInDegree) {
+    var angleInRadians = degToRad(angleInDegree);
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
  
@@ -28,7 +35,8 @@ function xRotation(angleInRadians) {
     ];
   }
  
-  function yRotation(angleInRadians) {
+  function yRotation(angleInDegree) {
+    var angleInRadians = degToRad(angleInDegree);
     var c = Math.cos(angleInRadians);
     var s = Math.sin(angleInRadians);
  
