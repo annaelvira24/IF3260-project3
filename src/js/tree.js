@@ -20,7 +20,8 @@ var leftfoot1Id     = 7;
 
 var transTorso1 = 0.7;
 
-var theta = [10, 0, -90, 0, 40, -40, 0, 0];
+var theta = [0, 0, 0, 0, 0, 0, 0, 0];
+var translate = [0, 0, 0, 0, 0, 0, 0, 0];
 
 var figure = [ ];
 for (var i = 0; i < numNodes; i++) {
@@ -31,7 +32,8 @@ function initNodes(id){
     var m;
     switch(id){
         case torso1Id:
-            m = yRotation(theta[id]);
+            m = translation(0,translate[id],0);
+            m = multiply(m, yRotation(theta[id]));
             figure[id] = createNode(m, torso1, null, head1Id);
             break;
         
@@ -71,12 +73,14 @@ function initNodes(id){
 
         case rightfoot1Id:
             m = yRotation(theta[id]);
+            m = multiply(m, translation(0,0,translate[id]));
             m = multiply(m, translation(0,-0.12,0));
             figure[id] = createNode(m, rightfoot1, null, null);
             break;
 
         case leftfoot1Id:
             m = yRotation(theta[id]);
+            m = multiply(m, translation(0,0,translate[id]));
             m = multiply(m, translation(0,-0.12,0));
             figure[id] = createNode(m, leftfoot1, null, null);
             break;
@@ -87,6 +91,8 @@ function initNodes(id){
 function torso1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, i*4, 4);
@@ -97,6 +103,8 @@ function torso1(){
 function head1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24 + i*4, 4);
@@ -107,6 +115,8 @@ function rightarm1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
  
+    checkShading(instanceMatrix, view_matrix);
+
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24*2 + i*4, 4);
     }
@@ -115,8 +125,9 @@ function rightarm1(){
 function leftarm1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+    
+    checkShading(instanceMatrix, view_matrix);
 
- 
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24*3 + i*4, 4);
     }
@@ -125,6 +136,8 @@ function leftarm1(){
 function rightleg1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24*4 + i*4, 4);
@@ -134,6 +147,8 @@ function rightleg1(){
 function leftleg1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24*5 + i*4, 4);
@@ -143,6 +158,8 @@ function leftleg1(){
 function rightfoot1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24*6 + i*4, 4);
@@ -152,6 +169,8 @@ function rightfoot1(){
 function leftfoot1(){
     instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24*7 + i*4, 4);

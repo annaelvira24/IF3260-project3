@@ -13,8 +13,8 @@
 
     <body>
         <div class="navbar">
-            <label> Shader mode </label> <input id='shader' type="checkbox" onclick="updateShading()">
-            <label> Animation </label> <input id='animation' type="checkbox" onclick="updateShading()">
+            <label> Shader mode </label> <input id='shader' type="checkbox" onclick="onShading()">
+            <label> Animation </label> <input id='animate' type="checkbox" onclick="updateAnimate()">
             <br/>
             <br/>
             <label><b>Camera</b></label><br/>
@@ -124,12 +124,17 @@
       <script type="text/javascript" src="js/util.js"></script>
       <script type="text/javascript" src="js/matrixOp.js"></script>
       <script type="text/javascript" src="js/projection.js"></script>
+      <script type="text/javascript" src="js/shading.js"></script>
       <script type="text/javascript" src="js/draw.js"></script>
       <script type="text/javascript" src="js/tree.js"></script>
       <script type="text/javascript" src="js/camera.js"></script>
-      <!-- <script type="text/javascript" src="js/shading.js"></script> -->
+      <script type="text/javascript" src="js/animate.js"></script>
       <!-- <script type="text/javascript" src="js/transformation.js"></script> -->
       <script>
           document.getElementById('angle').value = oldValueMove;
+          function onShading(){
+              updateShading();
+              traverse(torso1Id, stack=[]);
+          }
       </script>
 </html>
