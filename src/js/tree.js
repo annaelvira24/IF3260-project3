@@ -9,14 +9,16 @@ function createNode(transform, render, sibling, child){
 }
 
 // parts id declaration
-var torso1Id        = 0;
-var head1Id         = 1;
-var rightarm1Id     = 2;
-var leftarm1Id      = 3;
-var rightleg1Id     = 4;
-var leftleg1Id      = 5;
-var rightfoot1Id    = 6;
-var leftfoot1Id     = 7;
+var partsId = {};
+
+partsId["torso1Id"]     = 0;
+partsId["head1Id"]      = 1;
+partsId["rightarm1Id"]  = 2;
+partsId["leftarm1Id"]   = 3;
+partsId["rightleg1Id"]  = 4;
+partsId["leftleg1Id"]   = 5;
+partsId["rightfoot1Id"] = 6;
+partsId["leftfoot1Id"]  = 7;
 
 var transTorso1 = 0.7;
 
@@ -31,54 +33,54 @@ for (var i = 0; i < numNodes; i++) {
 function initNodes(id){
     var m;
     switch(id){
-        case torso1Id:
+        case partsId["torso1Id"]:
             m = translation(0,translate[id],0);
             m = multiply(m, yRotation(theta[id]));
-            figure[id] = createNode(m, torso1, null, head1Id);
+            figure[id] = createNode(m, torso1, null, partsId["head1Id"]);
             break;
         
-        case head1Id:
+        case partsId["head1Id"]:
             m = translation(0, 0.31, 0);
             m = multiply(m, yRotation(theta[id]));
-            figure[id] = createNode(m, head1, rightarm1Id, null);
+            figure[id] = createNode(m, head1, partsId["rightarm1Id"], null);
             break;
         
-        case rightarm1Id:
+        case partsId["rightarm1Id"]:
             m = translation(0,-0.15, 0);
             m = multiply(m, xRotation(theta[id]));
             m = multiply(m, translation(0.21,0.15,0));
-            figure[id] = createNode(m, rightarm1, leftarm1Id, null);
+            figure[id] = createNode(m, rightarm1, partsId["leftarm1Id"], null);
             break;
 
-        case leftarm1Id:
+        case partsId["leftarm1Id"]:
             m = translation(0,-0.15, 0);
             m = multiply(m, xRotation(theta[id]));
             m = multiply(m, translation(-0.21,0.15,0));
-            figure[id] = createNode(m, leftarm1, rightleg1Id, null);
+            figure[id] = createNode(m, leftarm1, partsId["rightleg1Id"], null);
             break;
         
-        case rightleg1Id:
+        case partsId["rightleg1Id"]:
             m = translation(0,-0.12, 0);
             m = multiply(m, xRotation(theta[id]));
             m = multiply(m, translation(0.1,-0.18,0));
-            figure[id] = createNode(m, rightleg1, leftleg1Id, rightfoot1Id);
+            figure[id] = createNode(m, rightleg1, partsId["leftleg1Id"], partsId["rightfoot1Id"]);
             break;
 
-        case leftleg1Id:
+        case partsId["leftleg1Id"]:
             m = translation(0,-0.12, 0);
             m = multiply(m, xRotation(theta[id]));
             m = multiply(m, translation(-0.1,-0.18,0));
-            figure[id] = createNode(m, leftleg1, null, leftfoot1Id);
+            figure[id] = createNode(m, leftleg1, null, partsId["leftfoot1Id"]);
             break;
 
-        case rightfoot1Id:
+        case partsId["rightfoot1Id"]:
             m = yRotation(theta[id]);
             m = multiply(m, translation(0,0,translate[id]));
             m = multiply(m, translation(0,-0.12,0));
             figure[id] = createNode(m, rightfoot1, null, null);
             break;
 
-        case leftfoot1Id:
+        case partsId["leftfoot1Id"]:
             m = yRotation(theta[id]);
             m = multiply(m, translation(0,0,translate[id]));
             m = multiply(m, translation(0,-0.12,0));
@@ -196,4 +198,4 @@ for(i=0; i<numNodes; i++) initNodes(i);
 console.log(figure);
 
 var stack = [];
-traverse(torso1Id, stack);
+traverse(partsId["torso1Id"], stack);

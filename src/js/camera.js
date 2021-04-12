@@ -3,7 +3,7 @@ function updateZoom(value){
     gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
 
     var stack = []
-    traverse(torso1Id, stack);
+    traverse(partsId["torso1Id"], stack);
 }
 
 function updateMove(){
@@ -14,7 +14,7 @@ function updateMove(){
     gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
 
     var stack = []
-    traverse(torso1Id, stack);
+    traverse(partsId["torso1Id"], stack);
 
     oldValueMove = value;
 }
