@@ -95,6 +95,9 @@ function torso1(){
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
+
+    const vIsTexture = gl.getUniformLocation(shaderProgram, 'vIsTexture');
+    gl.uniform1f(vIsTexture, 1.0);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, i*4, 4);
@@ -107,6 +110,9 @@ function head1(){
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
+
+    const vIsTexture = gl.getUniformLocation(shaderProgram, 'vIsTexture');
+    gl.uniform1f(vIsTexture, 0.0);
  
     for (var i = 0; i < 6; i++){
        gl.drawArrays(gl.TRIANGLE_FAN, 24 + i*4, 4);
@@ -194,8 +200,6 @@ function traverse(id, stack){
 }
 
 for(i=0; i<numNodes; i++) initNodes(i);
-
-console.log(figure);
 
 var stack = [];
 traverse(partsId["torso1Id"], stack);

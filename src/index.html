@@ -58,8 +58,6 @@
             attribute vec2 texture;
             attribute vec3 color;
 
-            // attribute float isTexture;
-
             uniform mat4 Pmatrix;
             uniform mat4 Vmatrix;
             uniform mat4 Mmatrix;
@@ -68,7 +66,7 @@
             varying vec3 vLighting;
             varying vec3 vColor;
             varying vec2 vTextCoord;
-            // varying float vIsTexture;
+            varying float vIsTexture;
 
             void main(void) {
                 gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
@@ -81,7 +79,6 @@
                 vLighting = ambientLight + (directionalLightColor * directional);
                 vColor = color;
                 vTextCoord = texture;
-                // vIsTexture = isTexture;
             }
             `;
 
@@ -93,15 +90,19 @@
             varying vec3 vLighting;
 
             varying vec2 vTextCoord;
-            // varying float vIsTexture;
 
+            uniform float vIsTexture;
             uniform sampler2D uSampler;
         
             void main(void) {
                 vec4 texelColor = texture2D(uSampler, vTextCoord);
-                gl_FragColor = vec4(texelColor.rgb *vLighting, 1.);
+                if(vIsTexture > 0.5){
+                    gl_FragColor = vec4(texelColor.rgb *vLighting, 1.);
+                }
+                else{
+                    gl_FragColor = vec4(vColor.rgb *vLighting,  1.);
+                }
 
-                // gl_FragColor = vec4(vColor.rgb *vLighting,  1.);
             }`;
 
         // Create fragment shader object
@@ -134,14 +135,15 @@
         setupProgram();
 
       </script>
-      <script type="text/javascript" src="js/util.js"></script>
-      <script type="text/javascript" src="js/matrixOp.js"></script>
-      <script type="text/javascript" src="js/projection.js"></script>
-      <script type="text/javascript" src="js/shading.js"></script>
-      <script type="text/javascript" src="js/draw.js"></script>
-      <script type="text/javascript" src="js/tree.js"></script>
-      <script type="text/javascript" src="js/camera.js"></script>
-      <script type="text/javascript" src="js/animate.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.1.1/math.js'></script>
+        <script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="js/matrixOp.js"></script>
+        <script type="text/javascript" src="js/projection.js"></script>
+        <script type="text/javascript" src="js/shading.js"></script>
+        <script type="text/javascript" src="js/draw.js"></script>
+        <script type="text/javascript" src="js/tree.js"></script>
+        <script type="text/javascript" src="js/camera.js"></script>
+        <script type="text/javascript" src="js/animate.js"></script>
       <!-- <script type="text/javascript" src="js/transformation.js"></script> -->
       <script>
           document.getElementById('angle').value = oldValueMove;
