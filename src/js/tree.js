@@ -20,10 +20,10 @@ partsId["leftleg1Id"]   = 5;
 partsId["rightfoot1Id"] = 6;
 partsId["leftfoot1Id"]  = 7;
 
-var transTorso1 = 0.7;
-
 var theta = [0, 0, 0, 0, 0, 0, 0, 0];
 var translate = [0, 0, 0, 0, 0, 0, 0, 0];
+var thetaRotate = [3, 10, 15, 15, 7.5, 7.5, 4, 4];
+var translateMove = [0.01, 0, 0, 0, 0, 0, 0.005, 0.005];
 
 var figure = [ ];
 for (var i = 0; i < numNodes; i++) {
@@ -91,7 +91,7 @@ function initNodes(id){
 
 
 function torso1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
@@ -106,7 +106,7 @@ function torso1(){
 }
 
 function head1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
@@ -120,7 +120,7 @@ function head1(){
 }
 
 function rightarm1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
  
     checkShading(instanceMatrix, view_matrix);
@@ -131,7 +131,7 @@ function rightarm1(){
 }
 
 function leftarm1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
     
     checkShading(instanceMatrix, view_matrix);
@@ -142,7 +142,7 @@ function leftarm1(){
 }
 
 function rightleg1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
@@ -153,7 +153,7 @@ function rightleg1(){
 }
 
 function leftleg1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
@@ -164,7 +164,7 @@ function leftleg1(){
 }
 
 function rightfoot1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
@@ -175,7 +175,7 @@ function rightfoot1(){
 }
 
 function leftfoot1(){
-    instanceMatrix = multiply(model_matrix,translation(-transTorso1,0,0));
+    instanceMatrix = multiply(model_matrix,translation(-0.7,0,0));
     gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
 
     checkShading(instanceMatrix, view_matrix);
@@ -203,3 +203,4 @@ for(i=0; i<numNodes; i++) initNodes(i);
 
 var stack = [];
 traverse(partsId["torso1Id"], stack);
+console.log(figure);

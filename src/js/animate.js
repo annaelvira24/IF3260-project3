@@ -13,7 +13,7 @@ async function startAnimate(){
     let legDirection = 'back';
     while(isAnimate){
         gl.clear( gl.COLOR_BUFFER_BIT);
-        theta[partsId["torso1Id"]] = (theta[partsId["torso1Id"]] + 3)%360;
+        theta[partsId["torso1Id"]] = (theta[partsId["torso1Id"]] + thetaRotate[partsId["torso1Id"]])%360;
 
         // rotate head
         if(theta[partsId["head1Id"]] >= 45){
@@ -22,7 +22,7 @@ async function startAnimate(){
         else if(theta[partsId["head1Id"]] <= -45){
             headDirection = 'right';
         }
-        headDirection == 'left' ? theta[partsId["head1Id"]]-=10 : theta[partsId["head1Id"]]+=10;
+        headDirection == 'left' ? theta[partsId["head1Id"]] -= thetaRotate[partsId["head1Id"]] : theta[partsId["head1Id"]] += thetaRotate[partsId["head1Id"]];
 
         // rotate arm
         if(theta[partsId["leftarm1Id"]] >= 90){
@@ -33,12 +33,12 @@ async function startAnimate(){
         }
 
         if(armDirection == 'back'){
-            theta[partsId["leftarm1Id"]]-=15;
-            theta[partsId["rightarm1Id"]]+=15;
+            theta[partsId["leftarm1Id"]] -= thetaRotate[partsId["leftarm1Id"]];
+            theta[partsId["rightarm1Id"]] += thetaRotate[partsId["rightarm1Id"]];
         }
         else{
-            theta[partsId["leftarm1Id"]]+=15;
-            theta[partsId["rightarm1Id"]]-=15;
+            theta[partsId["leftarm1Id"]] += thetaRotate[partsId["leftarm1Id"]];
+            theta[partsId["rightarm1Id"]] -= thetaRotate[partsId["rightarm1Id"]];
         }
 
         // rotate leg
@@ -50,30 +50,30 @@ async function startAnimate(){
         }
 
         if(legDirection == 'back'){
-            translate[partsId["torso1Id"]]+=0.01;
-            theta[partsId["leftleg1Id"]]-=7.5;
-            theta[partsId["rightleg1Id"]]+=7.5;
-            theta[partsId["leftfoot1Id"]]-=4;
-            theta[partsId["rightfoot1Id"]]+=4;
-            translate[partsId["leftfoot1Id"]]-=0.005;
-            translate[partsId["rightfoot1Id"]]+=0.005;
+            translate[partsId["torso1Id"]]+= translateMove[partsId["torso1Id"]];
+            theta[partsId["leftleg1Id"]] -= thetaRotate[partsId["leftleg1Id"]];
+            theta[partsId["rightleg1Id"]]+= thetaRotate[partsId["rightleg1Id"]];;
+            theta[partsId["leftfoot1Id"]]-= thetaRotate[partsId["leftfoot1Id"]];;
+            theta[partsId["rightfoot1Id"]]+= thetaRotate[partsId["rightfoot1Id"]];;
+            translate[partsId["leftfoot1Id"]]-= translateMove[partsId["leftfoot1Id"]];
+            translate[partsId["rightfoot1Id"]]+= translateMove[partsId["rightfoot1Id"]];
         }
         else{
-            translate[partsId["torso1Id"]]-=0.01;
-            theta[partsId["leftleg1Id"]]+=7.5;
-            theta[partsId["rightleg1Id"]]-=7.5;
-            theta[partsId["leftfoot1Id"]]+=4;
-            theta[partsId["rightfoot1Id"]]-=4;
-            translate[partsId["leftfoot1Id"]]+=0.005;
-            translate[partsId["rightfoot1Id"]]-=0.005;
+            translate[partsId["torso1Id"]]-= translateMove[partsId["torso1Id"]];;
+            theta[partsId["leftleg1Id"]]+= thetaRotate[partsId["leftleg1Id"]];;
+            theta[partsId["rightleg1Id"]]-= thetaRotate[partsId["rightleg1Id"]];;
+            theta[partsId["leftfoot1Id"]]+= thetaRotate[partsId["leftfoot1Id"]];;
+            theta[partsId["rightfoot1Id"]]-= thetaRotate[partsId["rightfoot1Id"]];;
+            translate[partsId["leftfoot1Id"]]+= translateMove[partsId["leftfoot1Id"]];;
+            translate[partsId["rightfoot1Id"]]-= translateMove[partsId["rightfoot1Id"]];;
         }
 
         var stack = [];
         for(var j=0; j<numNodes; j++){
             initNodes(j);
         }
+        
         traverse(partsId["torso1Id"], stack);
-        console.log(theta);
         await timer(100);
     }
 }
