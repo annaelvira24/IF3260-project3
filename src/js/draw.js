@@ -190,35 +190,12 @@ var colors = [
  ];
 
  var textures = [
-   0.0,  0.0,
-   1.0,  0.0,
-   1.0,  1.0,
-   0.0,  1.0,
-   // Back
-   0.0,  0.0,
-   1.0,  0.0,
-   1.0,  1.0,
-   0.0,  1.0,
-   // Top
-   0.0,  0.0,
-   1.0,  0.0,
-   1.0,  1.0,
-   0.0,  1.0,
-   // Bottom
-   0.0,  0.0,
-   1.0,  0.0,
-   1.0,  1.0,
-   0.0,  1.0,
-   // Right
-   0.0,  0.0,
-   1.0,  0.0,
-   1.0,  1.0,
-   0.0,  1.0,
-   // Left
-   0.0,  0.0,
-   1.0,  0.0,
-   1.0,  1.0,
-   0.0,  1.0,
+   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,
+   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,
+   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,
+   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,
+   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,
+   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,   0.0, 1.0,
  ];
 
  objects = [];
@@ -401,8 +378,6 @@ function initScene(proj_matrix, view_matrix, model_matrix){
    // Tell the shader we bound the texture to texture unit 0
    const uSampler = gl.getUniformLocation(shaderProgram, 'uSampler');
    gl.uniform1i(uSampler, 0);
-
-   console.log(objects);
 }
 
 function setUpObjects(){
@@ -450,8 +425,17 @@ function setUpObjects(){
    for (var i = 0; i<objects[0].parts.length; i++){
       objects[0].parts[i]["theta"] = 0;
       objects[0].parts[i]["translate"] = 0;
+      objects[0].parts[i]["sides"] = [];
+
+      // objects[0].parts[i]["sides"]["back"] = [];
+
+      // objects[0].parts[i]["sides"]["back"]["vertices"] = vertices.slice(i*12, i*12+12);
+      // objects[0].parts[i]["sides"]["back"]["colors"] = colors.slice(i*12, i*12+12);
+     
    }
 }
+
+console.log(objects);
 
 
 function reset(){
@@ -469,6 +453,7 @@ function reset(){
 }
 
 setUpBuffer();
+setUpObjects();
 var view_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,-2,1 ];
 var proj_matrix = getProjection(30, canvas.width/canvas.height, 1, 100);
 //  var proj_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,0,0, 0,0,0,1 ];
