@@ -368,12 +368,6 @@ function setUpObjects(){
    for (var i = 0; i<objects[0].parts.length; i++){
       objects[0].parts[i]["sides"] = [];
       objects[0].parts[i]["details"] = [];
-
-      // objects[0].parts[i]["sides"]["back"] = [];
-
-      // objects[0].parts[i]["sides"]["back"]["vertices"] = vertices.slice(i*12, i*12+12);
-      // objects[0].parts[i]["sides"]["back"]["colors"] = colors.slice(i*12, i*12+12);
-     
    }
 }
 
@@ -392,6 +386,15 @@ function reset(){
 
    oldValueMove = 0;
    document.getElementById('angle').value = oldValueMove;
+}
+
+function clearCanvas(){
+   gl.clear( gl.COLOR_BUFFER_BIT);
+   vertices = [];
+   colors = [];
+   vertexNormals = [];
+   textures = [];
+   setUpBuffer();
 }
 
 setUpBuffer();
