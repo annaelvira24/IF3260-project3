@@ -15,6 +15,7 @@ async function startAnimate(){
     while(isAnimate){
         gl.clear( gl.COLOR_BUFFER_BIT);
         theta[partsId["torso1Id"]] = (theta[partsId["torso1Id"]] + thetaRotate[partsId["torso1Id"]])%360;
+        theta[partsId["torso3Id"]] = (theta[partsId["torso3Id"]] + thetaRotate[partsId["torso3Id"]])%360;
 
         theta[partsId["base1Id"]] = (theta[partsId["base1Id"]] + 3)%360;
         
@@ -61,6 +62,7 @@ async function startAnimate(){
 
         if(legDirection == 'back'){
             translate[partsId["torso1Id"]]+= translateMove[partsId["torso1Id"]];
+            translate[partsId["torso3Id"]]+= translateMove[partsId["torso3Id"]];
             theta[partsId["leftleg1Id"]] -= thetaRotate[partsId["leftleg1Id"]];
             theta[partsId["rightleg1Id"]]+= thetaRotate[partsId["rightleg1Id"]];;
             theta[partsId["leftfoot1Id"]]-= thetaRotate[partsId["leftfoot1Id"]];;
@@ -72,6 +74,8 @@ async function startAnimate(){
             translate[partsId["torso1Id"]]-= translateMove[partsId["torso1Id"]];;
             theta[partsId["leftleg1Id"]]+= thetaRotate[partsId["leftleg1Id"]];;
             theta[partsId["rightleg1Id"]]-= thetaRotate[partsId["rightleg1Id"]];;
+            theta[partsId["leftleg3Id"]]+= thetaRotate[partsId["leftleg3Id"]];;
+            theta[partsId["rightleg3Id"]]-= thetaRotate[partsId["rightleg3Id"]];;
             theta[partsId["leftfoot1Id"]]+= thetaRotate[partsId["leftfoot1Id"]];;
             theta[partsId["rightfoot1Id"]]-= thetaRotate[partsId["rightfoot1Id"]];;
             translate[partsId["leftfoot1Id"]]+= translateMove[partsId["leftfoot1Id"]];;

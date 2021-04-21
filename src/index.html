@@ -83,10 +83,63 @@
                 vColor = color;
                 vTextCoord = texture;
             }
+
             `;
+        
+        var vertEnv = `
+        #version 300 es
+        in vec4 a_pos;
+        in vec3 a_normal;
+
+        uniform mat4 u_projection;
+        uniform mat4 u_transform;
+
+        out vec3 v_worldPosition;
+        out vec3 v_worldNormal;
+
+        void main() {
+        // Multiply the position by the matrix.
+        highp vec4 worldPos = u_transform * a_pos;
+        gl_Position = u_projection * worldPos;
+
+        // send the view position to the fragment shader
+        v_worldPosition = (worldPos).xyz;
+
+        // orient the normals and pass to the fragment shader
+        v_worldNormal = mat3(u_transform) * a_normal;
+        }
+        ` 
+        var fragEnv = `
+        #version 300 es
+
+        precision highp float;
+
+        // Passed in from the vertex shader.
+        in vec3 v_worldPosition;
+        in vec3 v_worldNormal;
+
+        // The texture.
+        uniform samplerCube u_texture;
+
+        // The position of the camera
+        uniform vec3 u_camPosition;
+
+        // we need to declare an output for the fragment shader
+        out vec4 outColor;
+
+        void main() {
+        vec3 worldNormal = normalize(v_worldNormal);
+        vec3 eyeToSurfaceDir = normalize(v_worldPosition - u_camPosition);
+        vec3 direction = reflect(eyeToSurfaceDir,worldNormal);
+
+        outColor = texture(u_texture, direction);
+}
+        `
 
         // Create a vertex shader object
         var vertShader = gl.createShader(gl.VERTEX_SHADER);
+        var vertShaderEnv = gl.createShader(gl.VERTEX_SHADER);
+
         // Fragment shader source code
         var fragCode = `precision mediump float;
             varying vec3 vColor;
@@ -108,22 +161,54 @@
                     gl_FragColor = vec4(vColor.rgb *vLighting,  1.);
                 } 
             }`;
+        
+            var fragCodeEnv = `
+                #version 300 es
 
+                precision mediump float;
+
+                in vec4 v_color;
+                in vec3 v_normal;
+
+                // Using a modified version of phong
+                uniform float u_ambLight;
+                uniform vec3 u_revLightDir;
+
+                out vec4 outColor;
+
+                void main() {
+                    vec3 normal = normalize(v_normal);
+                    float light = dot(normal, u_revLightDir);
+                    
+                    outColor = v_color;
+
+                    outColor.rgb *= u_ambLight + (1.0 - u_ambLight) * light;
+                }
+            `
         // Create fragment shader object
         var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-
+        var fragShaderEnv = gl.createShader(gl.FRAGMENT_SHADER);
+        
         // Create a shader program object to store
         var shaderProgram = gl.createProgram();
 
         function setupShader(){
             // Attach vertex shader source code
             gl.shaderSource(vertShader, vertCode);
+            // gl.shaderSource(vertShaderEnv, vertEnv);
+
             // Compile the vertex shader
             gl.compileShader(vertShader);
+            // gl.compileShader(vertShaderEnv);
+
             // Attach fragment shader source code
             gl.shaderSource(fragShader, fragCode);
+            // gl.shaderSource(fragShaderEnv, fragCodeEnv);
+
             // Compile the fragment shader
             gl.compileShader(fragShader);
+            // gl.compileShader(fragShaderEnv);
+
         }
 
         function setupProgram(){
@@ -132,7 +217,11 @@
             // Attach a fragment shader
             gl.attachShader(shaderProgram, fragShader);
             // Link both the programs
+            // gl.attachShader(shaderProgramEnv, vertEnv)
+            // gl.attachShader(shaderProgramEnv, fragEnv)
             gl.linkProgram(shaderProgram);
+            // gl.linkProgram(shaderProgramEnv);
+
         }
 
         setupShader();
