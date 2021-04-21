@@ -28,11 +28,11 @@ partsId["torso3Id"]     = 13;
 partsId["rightleg3Id"]  = 14;
 partsId["leftleg3Id"]   = 15;
 
-
 var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var translate = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var thetaRotate = [3, 10, 15, 15, 7.5, 7.5, 4, 4, 3, 10, 10, 10, 10, 10, 10, 10];
 var translateMove = [0.01, 0, 0, 0, 0, 0, 0.005, 0.005, 0.01, 0, 0, 0, 0, 0, 0];
+var roots = [0, 8, 13];
 
 function initNodes(id){
     var m;
@@ -350,10 +350,10 @@ function traverse(id, stack){
     }
 }
 
-function traverseAll(root1, root2, root3){
-    traverse(partsId[root1], stack = []);
-    traverse(partsId[root2], stack = []);
-    traverse(partsId[root3], stack = []);
+function traverseAll(roots){
+    for (var i in roots){
+        traverse(roots[i], stack = []);
+    }
 }
 
 var figure = [ ];
@@ -364,5 +364,5 @@ for (var i = 0; i < numNodes; i++) {
 
 for(i=0; i<numNodes; i++) initNodes(i);
 
-traverseAll("torso1Id", "base1Id", "torso3Id");
+traverseAll(roots);
 
