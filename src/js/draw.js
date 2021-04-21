@@ -480,7 +480,7 @@ function setUpObjects(){
          ]
       },
       {
-         name: "segemntedArm",
+         name: "wigglyThing",
          parts : 
          [
             {
