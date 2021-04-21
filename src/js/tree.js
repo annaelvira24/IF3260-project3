@@ -24,11 +24,15 @@ partsId["segment1Id"]   = 9;
 partsId["segment2Id"]   = 10;
 partsId["segment3Id"]   = 11;
 partsId["end1Id"]       = 12;
+partsId["torso3Id"]     = 13;
+partsId["rightleg3Id"]  = 14;
+partsId["leftleg3Id"]   = 15;
 
-var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var translate = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var thetaRotate = [3, 10, 15, 15, 7.5, 7.5, 4, 4, 3, 10, 10, 10, 10];
-var translateMove = [0.01, 0, 0, 0, 0, 0, 0.005, 0.005, 0.01, 0, 0, 0, 0];
+
+var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var translate = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaRotate = [3, 10, 15, 15, 7.5, 7.5, 4, 4, 3, 10, 10, 10, 10, 10, 10, 10];
+var translateMove = [0.01, 0, 0, 0, 0, 0, 0.005, 0.005, 0.01, 0, 0, 0, 0, 0, 0];
 
 function initNodes(id){
     var m;
@@ -116,6 +120,27 @@ function initNodes(id){
             m = multiply(m, xRotation(theta[id]));
             m = multiply(m, translation(0,0,translate[id]));
             figure[id] = createNode(m, end1, null, null);
+            break;
+
+        case partsId["torso3Id"]:
+            m = translation(0, 0, 0);
+            m = multiply(m, xRotation(theta[id]));
+            m = multiply(m, translation(0,0,translate[id]));
+            figure[id] = createNode(m, torso3, null, partsId["rightleg3Id"]);
+            break;
+        
+        case partsId["rightleg3Id"]:
+            m = translation(0.1, -0.2, 0);
+            m = multiply(m, xRotation(theta[id]));
+            m = multiply(m, translation(0,0,translate[id]));
+            figure[id] = createNode(m, rightleg3, partsId["leftleg3Id"], null);
+            break;
+
+        case partsId["leftleg3Id"]:
+            m = translation(-0.1, -0.2, 0);
+            m = multiply(m, xRotation(theta[id]));
+            m = multiply(m, translation(0,0,translate[id]));
+            figure[id] = createNode(m, leftleg3, null, null);
             break;
     }
 }
@@ -278,6 +303,39 @@ function end1(){
     }
 }
 
+function torso3(){
+    instanceMatrix = multiply(model_matrix,translation(0.7,0,0));
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
+ 
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*13 + i*4, 4);
+    }
+}
+
+function leftleg3(){
+    instanceMatrix = multiply(model_matrix,translation(0.7,0,0));
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
+ 
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*14 + i*4, 4);
+    }
+}
+
+function rightleg3(){
+    instanceMatrix = multiply(model_matrix,translation(0.7,0,0));
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
+ 
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*15 + i*4, 4);
+    }
+}
+
 function traverse(id, stack){
     if (id == null) return;
     stack.push(model_matrix);
@@ -292,9 +350,10 @@ function traverse(id, stack){
     }
 }
 
-function traverseAll(root1, root2){
+function traverseAll(root1, root2, root3){
     traverse(partsId[root1], stack = []);
     traverse(partsId[root2], stack = []);
+    traverse(partsId[root3], stack = []);
 }
 
 var figure = [ ];
@@ -304,7 +363,6 @@ for (var i = 0; i < numNodes; i++) {
 }
 
 for(i=0; i<numNodes; i++) initNodes(i);
-console.log(figure);
 
-traverseAll("torso1Id", "base1Id");
+traverseAll("torso1Id", "base1Id", "torso3Id");
 

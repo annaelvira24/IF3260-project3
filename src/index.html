@@ -6,7 +6,7 @@
         <script>
             var oldValueMove = 0;
             var isShading = false;
-            var numNodes = 13;
+            var numNodes = 16;
         </script>
                         
     </head>
@@ -71,33 +71,6 @@
             varying vec2 vTextCoord;
             varying float vIsTexture;
 
-            // attribute vec3 vert_pos;
-            // attribute vec3 vert_tang;
-            // attribute vec3 vert_bitang;
-            // attribute vec2 vert_uv;
-
-            // uniform mat4 model_mtx;
-            // uniform mat4 norm_mtx;
-
-            // varying vec2 frag_uv;
-            // varying vec3 ts_light_pos;
-            // varying vec3 ts_frag_pos;
-
-            // mat3 transpose(in mat3 inMatrix)
-            // {
-            //     vec3 i0 = inMatrix[0];
-            //     vec3 i1 = inMatrix[1];
-            //     vec3 i2 = inMatrix[2];
-
-            //     mat3 outMatrix = mat3(
-            //         vec3(i0.x, i1.x, i2.x),
-            //         vec3(i0.y, i1.y, i2.y),
-            //         vec3(i0.z, i1.z, i2.z)
-            //     );
-
-            //     return outMatrix;
-            // }
-
             void main(void) {
                 gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
                 vec3 ambientLight = vec3(0.3, 0.3, 0.3);
@@ -109,20 +82,6 @@
                 vLighting = ambientLight + (directionalLightColor * directional);
                 vColor = color;
                 vTextCoord = texture;
-
-
-                // ts_frag_pos = vec3(model_mtx * vec4(vert_pos, 1.0));
-                // vec3 vert_norm = cross(vert_bitang, vert_tang);
-
-                // vec3 t = normalize(mat3(norm_mtx) * vert_tang);
-                // vec3 b = normalize(mat3(norm_mtx) * vert_bitang);
-                // vec3 n = normalize(mat3(norm_mtx) * vert_norm);
-                // mat3 tbn = transpose(mat3(t, b, n));
-                
-                // vec3 light_pos = vec3(1, 2, 0);
-                // ts_light_pos = tbn * light_pos;
-                // ts_frag_pos = tbn * ts_frag_pos;
-                // frag_uv = vert_uv;
             }
             `;
 
@@ -137,23 +96,10 @@
 
             uniform float vIsTexture;
             uniform sampler2D uSampler;
-            
-            // uniform sampler2D tex_norm;
-            // uniform sampler2D tex_diffuse;
-            // uniform int show_tex;
-            // varying vec2 frag_uv;
-            // varying vec3 ts_light_pos;
-            // varying vec3 ts_frag_pos;
+        
         
             void main(void) {
                 vec4 texelColor = texture2D(uSampler, vTextCoord);
-
-                // vec3 light_dir = normalize(ts_light_pos - ts_frag_pos);
-                // vec3 albedo = texture2D(tex_diffuse, frag_uv).rgb;
-                // if (show_tex == 0) { 
-                //     albedo = vec3(1,1,1);
-                // }
-                // vec3 ambient = 0.3 * albedo;
 
                 if(vIsTexture == 1.0){
                     gl_FragColor = vec4(texelColor.rgb *vLighting, 1.);
@@ -161,11 +107,6 @@
                 else if(vIsTexture == 0.0){
                     gl_FragColor = vec4(vColor.rgb *vLighting,  1.);
                 } 
-                // else if (vIsTexture == 2){
-                //     vec3 norm = normalize(texture2D(tex_norm, frag_uv).rgb * 2.0 - 1.0);
-                //     float diffuse = max(dot(light_dir, norm), 0.0);
-                //     gl_FragColor = vec4(diffuse * albedo + ambient, 1.0);
-                // }
             }`;
 
         // Create fragment shader object
@@ -213,7 +154,7 @@
           document.getElementById('angle').value = oldValueMove;
           function onShading(){
               updateShading();
-              traverseAll("torso1Id", "base1Id");
+              traverseAll("torso1Id", "base1Id", "torso3Id");
           }
       </script>
 </html>

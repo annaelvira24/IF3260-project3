@@ -577,15 +577,15 @@ function setUpObjects(){
          parts : 
          [
             {
-               name: "body",
+               name: "torso3Id",
                id : 13
             },
             {
-               name: "leg1",
+               name: "rightleg3Id",
                id : 14
             },
             {
-               name: "leg2",
+               name: "leftleg3Id",
                id : 15
             }
          ]
@@ -628,7 +628,6 @@ setUpBuffer();
 setUpObjects();
 var view_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,-2,1 ];
 var proj_matrix = getProjection(30, canvas.width/canvas.height, 1, 100);
-//  var proj_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,0,0, 0,0,0,1 ];
 var model_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
 let normal_matrix = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
 
