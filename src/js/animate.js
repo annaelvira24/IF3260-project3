@@ -103,7 +103,7 @@ async function startAnimate(){
             initNodes(j);
         }
         
-        traverseAll("torso1Id", "base1Id", "torso3Id");
+        traverseAll(roots);
         await timer(100);
     }
 }

@@ -80,6 +80,7 @@ function encodingData(rawJson){
     thetaRotate = [];
     translateMove = [];
     partsId = {};
+    roots = [];
 
     for (var i = 0; i<rawJson.length; i++){
         for (var j = 0; j<rawJson[i].parts.length; j++){
@@ -98,6 +99,10 @@ function encodingData(rawJson){
                 if(i == 0 && j == 0){
                     pushFromMatrix(rawJson[i].parts[j]["sides"][k]["texture"], textures);
                 }
+            }
+
+            if(j == 0){
+                roots.push(rawJson[i].parts[j]["id"]);
             }
         }
     }
@@ -146,24 +151,14 @@ async function initModelFile(filename) {
     numNodes = countNodes(rawJson);
     console.log(numNodes);
 
-    // var figure = [ ];
     figure = [];
-    // console.log(figure);
-
     for (var i = 0; i < numNodes; i++) {
         figure[i] = createNode(null, null, null, null);
     }
 
-    // console.log(figure);
-
-
     for(i=0; i<numNodes; i++) initNodes(i);
 
-    console.log(figure);
-
-    traverse(0, stack = []);
-    traverse(8, stack = []);
-    console.log(vertexNormals);
+    traverseAll(roots);
 }
 
 const loadFile = async (filename) => {
