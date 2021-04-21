@@ -3,7 +3,7 @@
 Sebuah website yang memuat 3 buah articulated models 3D dengan menggunakan WebGL murni tanpa library atau framework apa pun. Secara garis besar website ini terdiri dari beberapa tombol dan slider untuk melakukan perintah dan menjalankan fitur-fitur yang ada dan sebuah canvas tempat pengguna model digambar dan dimodifikasi. Beberapa fungsionalitas yang dimiliki adalah animasi, mengubah kamera view, reset, shader mode, dan save/load file model.
 
 ## Prerequisites
-* Web browser yang mendukung WebGL, HTML5, dan javascript. Sangat disarankan menggunakan <b>Google Chrome</b> atau <b>Microsoft Edges</b>
+* Web browser yang mendukung WebGL, HTML5, dan javascript. Sangat disarankan menggunakan <b>Microsoft Edges</b>
 
 ## How to run
 1. Clone repository ini
