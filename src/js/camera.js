@@ -2,8 +2,7 @@ function updateZoom(value){
     view_matrix = multiply(scale(value, value, value), view_matrix);
     gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
 
-    var stack = []
-    traverse(partsId["torso1Id"], stack);
+    traverseAll("torso1Id", "base1Id");
 }
 
 function updateMove(){
@@ -13,8 +12,7 @@ function updateMove(){
     view_matrix = multiply(yRotation(move), view_matrix);
     gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
 
-    var stack = []
-    traverse(partsId["torso1Id"], stack);
+    traverseAll("torso1Id", "base1Id");
 
     oldValueMove = value;
 }

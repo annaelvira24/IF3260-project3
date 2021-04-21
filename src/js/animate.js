@@ -11,9 +11,19 @@ async function startAnimate(){
     let headDirection = 'left';
     let armDirection = 'back';
     let legDirection = 'back';
+    let wigglyDirection = 'back';
     while(isAnimate){
         gl.clear( gl.COLOR_BUFFER_BIT);
         theta[partsId["torso1Id"]] = (theta[partsId["torso1Id"]] + thetaRotate[partsId["torso1Id"]])%360;
+
+        theta[partsId["base1Id"]] = (theta[partsId["base1Id"]] + 3)%360;
+        
+        if(theta[partsId["segment1Id"]] >= 30){
+            wigglyDirection = 'back';
+        }
+        else if(theta[partsId["segment1Id"]] <= -30){
+            wigglyDirection = 'front';
+        }
 
         // rotate head
         if(theta[partsId["head1Id"]] >= 45){
@@ -68,12 +78,28 @@ async function startAnimate(){
             translate[partsId["rightfoot1Id"]]-= translateMove[partsId["rightfoot1Id"]];;
         }
 
-        var stack = [];
+        if(wigglyDirection == 'back'){
+            translate[partsId["base1Id"]]+=0.01;
+            theta[partsId["segment1Id"]]-=5;
+            theta[partsId["segment2Id"]]-=5;
+            theta[partsId["segment3Id"]]-=5;
+            theta[partsId["end1Id"]]-=5;
+            translate[partsId["end1Id"]]-=0.005;
+        }
+        else{
+            translate[partsId["base1Id"]]-=0.01;
+            theta[partsId["segment1Id"]]+=5;
+            theta[partsId["segment2Id"]]+=5;
+            theta[partsId["segment3Id"]]+=5;
+            theta[partsId["end1Id"]]+=5;
+            translate[partsId["end1Id"]]+=0.005;
+        }
+
         for(var j=0; j<numNodes; j++){
             initNodes(j);
         }
         
-        traverse(partsId["torso1Id"], stack);
+        traverseAll("torso1Id", "base1Id");
         await timer(100);
     }
 }

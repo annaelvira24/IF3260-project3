@@ -6,7 +6,7 @@
         <script>
             var oldValueMove = 0;
             var isShading = false;
-            var numNodes = 8;
+            var numNodes = 13;
         </script>
                         
     </head>
@@ -213,7 +213,7 @@
           document.getElementById('angle').value = oldValueMove;
           function onShading(){
               updateShading();
-              traverse(partsId["torso1Id"], stack=[]);
+              traverseAll("torso1Id", "base1Id");
           }
       </script>
 </html>

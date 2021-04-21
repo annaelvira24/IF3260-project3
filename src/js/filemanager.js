@@ -1,32 +1,35 @@
 function decodingData(listObject, listFigure, listVertex, listColor, listNormal, listTexture, listTheta, listTranslate, listThetaRotate, listTranslateMove){
     var result = listObject;
+    console.log(result.length);
     
     let sides = ["back", "front", "bottom", "top", "left", "right"]
 
+    let offset = 0;
     for (var i = 0; i<result.length; i++){
         for (var j = 0; j<result[i].parts.length; j++){
             result[i].parts[j]["details"].push({
-                theta : listTheta[j],
-                translate : listTranslate[j],
-                rotate : listThetaRotate[j],
-                move : listTranslateMove[j],
-                node: listFigure[j]
+                theta : listTheta[(j+offset)],
+                translate : listTranslate[(j+offset)],
+                rotate : listThetaRotate[(j+offset)],
+                move : listTranslateMove[(j+offset)],
+                node: listFigure[(j+offset)]
             })
 
             for (var k = 0; k<6; k++){
-                result[0].parts[j]["sides"].push({
+                result[i].parts[j]["sides"].push({
                     name : sides[k], 
-                    vertices : [listVertex.slice(j*72+k*12, j*72+k*12+3), listVertex.slice(j*72+k*12+3, j*72+k*12+6), listVertex.slice(j*72+k*12+6, j*72+k*12+9), listVertex.slice(j*72+k*12+9, j*72+k*12+12)],
-                    colors : [listColor.slice(j*72+k*12, j*72+k*12+3), listColor.slice(j*72+k*12+3, j*72+k*12+6), listColor.slice(j*72+k*12+6, j*72+k*12+9), listColor.slice(j*72+k*12+9, j*72+k*12+12)],
-                    normals : [listNormal.slice(j*72+k*12, j*72+k*12+3), listNormal.slice(j*72+k*12+3, j*72+k*12+6), listNormal.slice(j*72+k*12+6, j*72+k*12+9), listNormal.slice(j*72+k*12+9, j*72+k*12+12)],
+                    vertices : [listVertex.slice((j+offset)*72+k*12, (j+offset)*72+k*12+3), listVertex.slice((j+offset)*72+k*12+3, (j+offset)*72+k*12+6), listVertex.slice((j+offset)*72+k*12+6, (j+offset)*72+k*12+9), listVertex.slice((j+offset)*72+k*12+9, (j+offset)*72+k*12+12)],
+                    colors : [listColor.slice((j+offset)*72+k*12, (j+offset)*72+k*12+3), listColor.slice((j+offset)*72+k*12+3, (j+offset)*72+k*12+6), listColor.slice((j+offset)*72+k*12+6, (j+offset)*72+k*12+9), listColor.slice((j+offset)*72+k*12+9, (j+offset)*72+k*12+12)],
+                    normals : [listNormal.slice((j+offset)*72+k*12, (j+offset)*72+k*12+3), listNormal.slice((j+offset)*72+k*12+3, (j+offset)*72+k*12+6), listNormal.slice((j+offset)*72+k*12+6, (j+offset)*72+k*12+9), listNormal.slice((j+offset)*72+k*12+9, (j+offset)*72+k*12+12)],
                     texture : []
                 });
 
-                if(j == 0){
+                if(i == 0 && j == 0){
                     result[0].parts[j]["sides"][k].texture = [listTexture.slice(k*8, k*8+2), listTexture.slice(k*8+2, k*8+4), listTexture.slice(k*8+4, k*8+6), listTexture.slice(k*8+6, k*8+8)];
                 }
             }
         }
+        offset += result[i].parts.length
     }
 
     return result;
@@ -88,16 +91,19 @@ function encodingData(rawJson){
             translateMove.push(rawJson[i].parts[j]["details"][0]["move"]);
 
             for (var k = 0; k<6; k++){
-                pushFromMatrix(rawJson[0].parts[j]["sides"][k]["vertices"], vertices);
-                pushFromMatrix(rawJson[0].parts[j]["sides"][k]["colors"], colors);
-                pushFromMatrix(rawJson[0].parts[j]["sides"][k]["normals"], vertexNormals);
+                pushFromMatrix(rawJson[i].parts[j]["sides"][k]["vertices"], vertices);
+                pushFromMatrix(rawJson[i].parts[j]["sides"][k]["colors"], colors);
+                pushFromMatrix(rawJson[i].parts[j]["sides"][k]["normals"], vertexNormals);
 
-                if(j == 0){
-                    pushFromMatrix(rawJson[0].parts[j]["sides"][k]["texture"], textures);
+                if(i == 0 && j == 0){
+                    pushFromMatrix(rawJson[i].parts[j]["sides"][k]["texture"], textures);
                 }
             }
         }
     }
+    console.log(partsId);
+    console.log(translate);
+
 }
 
 function loadData() {
@@ -138,16 +144,26 @@ async function initModelFile(filename) {
     initScene(proj_matrix, view_matrix, model_matrix, normal_matrix);
 
     numNodes = countNodes(rawJson);
+    console.log(numNodes);
 
-    var figure = [ ];
+    // var figure = [ ];
+    figure = [];
+    // console.log(figure);
+
     for (var i = 0; i < numNodes; i++) {
         figure[i] = createNode(null, null, null, null);
     }
 
+    // console.log(figure);
+
+
     for(i=0; i<numNodes; i++) initNodes(i);
 
-    var stack = [];
-    traverse(0, stack);
+    console.log(figure);
+
+    traverse(0, stack = []);
+    traverse(8, stack = []);
+    console.log(vertexNormals);
 }
 
 const loadFile = async (filename) => {

@@ -19,16 +19,16 @@ partsId["rightleg1Id"]  = 4;
 partsId["leftleg1Id"]   = 5;
 partsId["rightfoot1Id"] = 6;
 partsId["leftfoot1Id"]  = 7;
+partsId["base1Id"]      = 8;
+partsId["segment1Id"]   = 9;
+partsId["segment2Id"]   = 10;
+partsId["segment3Id"]   = 11;
+partsId["end1Id"]       = 12;
 
-var theta = [0, 0, 0, 0, 0, 0, 0, 0];
-var translate = [0, 0, 0, 0, 0, 0, 0, 0];
-var thetaRotate = [3, 10, 15, 15, 7.5, 7.5, 4, 4];
-var translateMove = [0.01, 0, 0, 0, 0, 0, 0.005, 0.005];
-
-var figure = [ ];
-for (var i = 0; i < numNodes; i++) {
-    figure[i] = createNode(null, null, null, null);
-}
+var theta = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var translate = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var thetaRotate = [3, 10, 15, 15, 7.5, 7.5, 4, 4, 3, 10, 10, 10, 10];
+var translateMove = [0.01, 0, 0, 0, 0, 0, 0.005, 0.005, 0.01, 0, 0, 0, 0];
 
 function initNodes(id){
     var m;
@@ -85,6 +85,37 @@ function initNodes(id){
             m = multiply(m, translation(0,0,translate[id]));
             m = multiply(m, translation(0,-0.12,0));
             figure[id] = createNode(m, leftfoot1, null, null);
+            break;
+
+        case partsId["base1Id"]:
+            m = translation(0, translate[id], 0);
+            m = multiply(m, yRotation(theta[id]));
+            figure[id] = createNode(m, base1, null, partsId["segment1Id"]);
+            break;
+
+        case partsId["segment1Id"]:
+            m = translation(0, 0.13, 0);
+            m = multiply(m, xRotation(theta[id]));
+            figure[id] = createNode(m, segment1, null, partsId["segment2Id"]);
+            break;
+        
+        case partsId["segment2Id"]:
+            m = translation(0, 0.13, 0);
+            m = multiply(m, xRotation(theta[id]));
+            figure[id] = createNode(m, segment2, null, partsId["segment3Id"]);
+            break;
+        
+        case partsId["segment3Id"]:
+            m = translation(0, 0.13, 0);
+            m = multiply(m, xRotation(theta[id]));
+            figure[id] = createNode(m, segment3, null, partsId["end1Id"]);
+            break;
+        
+        case partsId["end1Id"]:
+            m = translation(0, 0.13, 0);
+            m = multiply(m, xRotation(theta[id]));
+            m = multiply(m, translation(0,0,translate[id]));
+            figure[id] = createNode(m, end1, null, null);
             break;
     }
 }
@@ -185,6 +216,68 @@ function leftfoot1(){
     }
 }
 
+function base1(){
+    instanceMatrix = model_matrix;
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
+
+    const vIsTexture = gl.getUniformLocation(shaderProgram, 'vIsTexture');
+    gl.uniform1f(vIsTexture, 0.0);
+ 
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*8 + i*4, 4);
+    }
+
+}
+
+function segment1(){
+    instanceMatrix = model_matrix;
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
+
+    const vIsTexture = gl.getUniformLocation(shaderProgram, 'vIsTexture');
+    gl.uniform1f(vIsTexture, 0.0);
+ 
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*9 + i*4, 4);
+    }
+}
+
+function segment2(){
+    instanceMatrix = model_matrix;
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+ 
+    checkShading(instanceMatrix, view_matrix);
+
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*10 + i*4, 4);
+    }
+}
+
+function segment3(){
+    instanceMatrix = model_matrix;
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+    
+    checkShading(instanceMatrix, view_matrix);
+
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*11 + i*4, 4);
+    }
+}
+
+function end1(){
+    instanceMatrix = model_matrix;
+    gl.uniformMatrix4fv(_Mmatrix, false, instanceMatrix);
+
+    checkShading(instanceMatrix, view_matrix);
+ 
+    for (var i = 0; i < 6; i++){
+       gl.drawArrays(gl.TRIANGLE_FAN, 24*12 + i*4, 4);
+    }
+}
+
 function traverse(id, stack){
     if (id == null) return;
     stack.push(model_matrix);
@@ -199,8 +292,19 @@ function traverse(id, stack){
     }
 }
 
-for(i=0; i<numNodes; i++) initNodes(i);
+function traverseAll(root1, root2){
+    traverse(partsId[root1], stack = []);
+    traverse(partsId[root2], stack = []);
+}
 
-var stack = [];
-traverse(partsId["torso1Id"], stack);
+var figure = [ ];
+
+for (var i = 0; i < numNodes; i++) {
+    figure[i] = createNode(null, null, null, null);
+}
+
+for(i=0; i<numNodes; i++) initNodes(i);
 console.log(figure);
+
+traverseAll("torso1Id", "base1Id");
+
